@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model GroceryList {
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  items     ShoppingItem[]
+}
+
+model ShoppingItem {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  quantity    Int
+  bought      Boolean     @default(false)
+  listId      String      @db.ObjectId
+  list        GroceryList @relation(fields: [listId], references: [id])
+  createdAt   DateTime    @default(now())
+}
